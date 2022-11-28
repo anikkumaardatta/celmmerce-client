@@ -1,0 +1,19 @@
+[
+    
+    {
+        "userName": "",
+        "userEmail": "",
+        "userImage": "",
+        "isSeller": "",
+        "isVerified": ""
+    },
+    
+    {
+        "category": "",
+        "productName": "",
+        "productImage": "",
+        "publishDate": "",
+        "isAvailable": "",
+        "isAdvertise": ""
+    }
+]
