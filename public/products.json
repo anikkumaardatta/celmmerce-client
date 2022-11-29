@@ -1,0 +1,55 @@
+[
+    {
+    "id": 1,
+    "picture": ip13,
+    "productName": "Phone 13 Pro",
+    "location": "Chashara, Narayanganj",
+    "resalePrice": "80000",
+    "originalPrice": "105000",
+    "yearsOfUse": "1year",
+    "condition": "Good",
+    "contactNumber": "01970192772",
+    "publishDate": "27th Nov 2022",
+    "description":
+      "Portrait mode with advanced bokeh and Depth Control, Portrait Lighting with six effects (Natural, Studio, Contour, Stage, Stage Mono, High‑Key Mono), Animoji and Memoji, Night mode, Deep Fusion, Smart HDR 4,",
+
+      "contactNumber": "01970192772",
+      "sellerName": "Bay Joe",
+      "sellerImg": sellerPhoto,
+    },
+    {
+        "id": 2,
+        "picture": ipXS,
+        "productName": "Phone XS Max",
+    "location": "Deovog, Narayanganj",
+    "resalePrice": "30000",
+    "originalPrice": "75000",
+    "yearsOfUse": "1year",
+    "condition": "Fair",
+    "contactNumber": "01970192772",
+    "publishDate": "21th Nov 2022",
+    "description":
+    "Portrait mode with advanced bokeh and Depth Control, Portrait Lighting with six effects (Natural, Studio, Contour, Stage, Stage Mono, High‑Key Mono), Animoji and Memoji, Night mode, Deep Fusion, Smart HDR 4,",
+    
+    "contactNumber": "01970192772",
+    "sellerName": "Bay Joe",
+    "sellerImg": sellerPhoto,
+},
+{
+    "id": 3,
+    "picture": ip12,
+    "productName": "Phone 12 Pro Max",
+    "location": "Mirpur, Dhaka",
+    "resalePrice": "90000",
+    "originalPrice": "105000",
+    "yearsOfUse": "1year",
+    "condition": "Excellent",
+    "publishDate": "14th Nov 2022",
+    "description":
+    "Portrait mode with advanced bokeh and Depth Control, Portrait Lighting with six effects (Natural, Studio, Contour, Stage, Stage Mono, High‑Key Mono), Animoji and Memoji, Night mode, Deep Fusion, Smart HDR 4,",
+    
+    "contactNumber": "01970192772",
+    "sellerName": "Bay Joe",
+    "sellerImg": sellerPhoto,
+},
+]

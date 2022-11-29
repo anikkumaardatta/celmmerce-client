@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/celmmerce150x150.png";
+import { AuthContext } from "../../Context/AuthProvider/AuthProvider";
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
+  const handleLogOut = () => {
+    logOut()
+      .then((result) => {
+        const user = result.user;
+      })
+      .catch((err) => console.log(err));
+  };
   const menuItems = (
     <>
       <li>
@@ -9,11 +18,18 @@ const Navbar = () => {
           Home
         </Link>
       </li>
+      {user?.email && (
+        <li>
+          <Link className="rounded-md px-8" to="/dashboard">
+            Dashboard
+          </Link>
+        </li>
+      )}
     </>
   );
 
   return (
-    <div className="bg-base-300 st">
+    <div className="bg-base-300 sticky top-0 z-50">
       <div className="navbar max-w-5xl mx-auto">
         <div className="navbar-start">
           <div className="dropdown">
@@ -49,9 +65,15 @@ const Navbar = () => {
           <ul className="menu menu-horizontal p-0">{menuItems}</ul>
         </div>
         <div className="navbar-end">
-          <Link to="/login" className="btn btn-primary px-6">
-            Login
-          </Link>
+          {user?.uid ? (
+            <button onClick={handleLogOut} className="btn btn-primary px-6">
+              Log out
+            </button>
+          ) : (
+            <Link to="/login" className="btn btn-primary px-6">
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -1,30 +1,30 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider/AuthProvider";
 import googleLogo from "../../assets/logo/google30.png";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const Register = () => {
-  const { user, createUser, updateUser, googleSignIn } =
+  const { user, createUser, updateUser, googleSignIn, setUserDataInfo } =
     useContext(AuthContext);
-  const imgHostKey = process.env.REACT_APP_imgbb_key;
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
-
-  const [data, setData] = useState("");
+  // States
   const [error, setError] = useState("");
-  const [img, setImg] = useState(null);
-  const [imgLoad, setImgLoad] = useState(null);
   const [imgURL, setImgURL] = useState(null);
-  const [userInfo, setUserInfo] = useState([]);
-
-  console.log(user);
 
   const handleRegister = (userData) => {
     const userPhoto = userData.userImage[0];
 
     const formData = new FormData();
     formData.append("image", userPhoto);
+
+    const imgHostKey = process.env.REACT_APP_imgbb_key;
 
     const url = `https://api.imgbb.com/1/upload?key=${imgHostKey}`;
 
@@ -41,11 +41,9 @@ const Register = () => {
             const userObj = {
               userName: userData.userName,
               userEmail: userData.userEmail,
-              userImage: imgURL,
               userType: userData.category,
               isVerified: false,
             };
-            // Set user info to the DB
             fetch(`http://localhost:5000/users`, {
               method: "POST",
               headers: {
@@ -57,29 +55,43 @@ const Register = () => {
               .then((data) => {
                 console.log(data);
               });
-            const { userEmail, password } = userData;
-            createUser(userEmail, password)
+            setError("");
+            createUser(userData.userEmail, userData.password)
               .then((userCredential) => {
                 const user = userCredential.user;
-                updateUser(userData.userName, imgData.data.url)
+                console.log(user);
+                toast("User created successfully");
+
+                const userInfo = {
+                  displayName: userData.userName,
+                  photoURL: imgData.data.url,
+                };
+
+                updateUser(userInfo)
                   .then(() => {
-                    console.log("success");
+                    navigate("/");
+                    console.log("Hello");
                   })
                   .catch((error) => {
-                    setError(error.message);
                     console.log(error);
                   });
               })
               .catch((error) => {
+                const errorCode = error.code;
+                setError(error.message);
                 console.log(error);
                 // ..
               });
           }
         }
       });
-    //   set user info
-    // console.log("User Info:", user);
+
+    console.log(userPhoto);
+    console.log(userData);
+    console.log(user);
+    console.log();
   };
+
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then((result) => {
@@ -90,6 +102,91 @@ const Register = () => {
         setError(error.message);
       });
   };
+
+  // if(user.email && )
+
+  // const imgHostKey = process.env.REACT_APP_imgbb_key;
+  // const navigate = useNavigate();
+
+  // const [data, setData] = useState("");
+  // const [error, setError] = useState("");
+  // const [img, setImg] = useState(null);
+  // const [imgLoad, setImgLoad] = useState(null);
+  // const [imgURL, setImgURL] = useState(null);
+  // const [userInfo, setUserInfo] = useState([]);
+
+  // console.log(user);
+
+  // const handleRegister = (userData) => {
+  //   const userPhoto = userData.userImage[0];
+
+  //   const formData = new FormData();
+  //   formData.append("image", userPhoto);
+
+  //   const url = `https://api.imgbb.com/1/upload?key=${imgHostKey}`;
+
+  //   fetch(url, {
+  //     method: "POST",
+  //     body: formData,
+  //   })
+  //     .then((res) => res.json())
+  //     .then((imgData) => {
+  //       console.log(imgData);
+  //       if (imgData.success) {
+  //         setImgURL(imgData.data.url);
+  //         if (imgURL) {
+  //           const userObj = {
+  //             userName: userData.userName,
+  //             userEmail: userData.userEmail,
+  //             userImage: imgURL,
+  //             userType: userData.category,
+  //             isVerified: false,
+  //           };
+  //           // Set user info to the DB
+  //           fetch(`http://localhost:5000/users`, {
+  //             method: "POST",
+  //             headers: {
+  //               "content-type": "application/json",
+  //             },
+  //             body: JSON.stringify(userObj),
+  //           })
+  //             .then((res) => res.json())
+  //             .then((data) => {
+  //               console.log(data);
+  //             });
+  //           const { userEmail, password } = userData;
+  //           createUser(userEmail, password)
+  //             .then((userCredential) => {
+  //               const user = userCredential.user;
+  //               updateUser(userData.userName, imgData.data.url)
+  //                 .then(() => {
+  //                   console.log("success");
+  //                 })
+  //                 .catch((error) => {
+  //                   setError(error.message);
+  //                   console.log(error);
+  //                 });
+  //             })
+  //             .catch((error) => {
+  //               console.log(error);
+  //               // ..
+  //             });
+  //         }
+  //       }
+  //     });
+  //   //   set user info
+  //   // console.log("User Info:", user);
+  // };
+  // const handleGoogleSignIn = () => {
+  //   googleSignIn()
+  //     .then((result) => {
+  //       const user = result.user;
+  //       // navigate(from, { replace: true });
+  //     })
+  //     .catch((error) => {
+  //       setError(error.message);
+  //     });
+  // };
 
   return (
     <div className="p-5 bg-base-200">
@@ -103,10 +200,16 @@ const Register = () => {
         >
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Name</span>
+              {errors.userName ? (
+                <span className="label-text text-pink-600" role="alert">
+                  {errors.userName?.message}
+                </span>
+              ) : (
+                <span className="label-text">Name</span>
+              )}
             </label>
             <input
-              {...register("userName", { required: true })}
+              {...register("userName", { required: "Username is required" })}
               type="text"
               placeholder="User Name"
               className="input input-bordered focus:ring focus:ring-violet-300"
@@ -114,10 +217,16 @@ const Register = () => {
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Email</span>
+              {errors.userEmail ? (
+                <span className="label-text text-pink-600" role="alert">
+                  {errors.userEmail?.message}
+                </span>
+              ) : (
+                <span className="label-text">Email</span>
+              )}
             </label>
             <input
-              {...register("userEmail", { required: true })}
+              {...register("userEmail", { required: "Email is required" })}
               type="email"
               placeholder="Email"
               className="input input-bordered focus:ring focus:ring-violet-300"
@@ -125,10 +234,22 @@ const Register = () => {
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Password</span>
+              {errors.password ? (
+                <span className="label-text text-pink-600" role="alert">
+                  {errors.password?.message}
+                </span>
+              ) : (
+                <span className="label-text">Password</span>
+              )}
             </label>
             <input
-              {...register("password", { required: true })}
+              {...register("password", {
+                required: "Please Eater password",
+                minLength: {
+                  value: 6,
+                  message: "Password must be 6 characters long",
+                },
+              })}
               type="password"
               placeholder="Password"
               className="input input-bordered focus:ring focus:ring-violet-300"
@@ -137,13 +258,19 @@ const Register = () => {
           <div className="form-control flex flex-col md:flex-row">
             <div>
               <label className="label">
-                <span className="label-text">
-                  Choose profile photo (Required)
-                </span>
+                {errors.userImage ? (
+                  <span className="label-text text-pink-600" role="alert">
+                    {errors.userImage?.message}
+                  </span>
+                ) : (
+                  <span className="label-text">Profile photo</span>
+                )}
               </label>
-              <label className="block btn btn-ghost  focus:ring focus:ring-violet-300 mr-2">
+              <label className="block btn btn-ghost border border-double border-xl border-gray-300 focus:ring focus:ring-violet-300 mr-2">
                 <input
-                  {...register("userImage", { required: true })}
+                  {...register("userImage", {
+                    required: "Choose profile photo (Required)",
+                  })}
                   type="file"
                   className="block w-full my-1 text-sm cursor-pointer
                     text-slate-500
@@ -170,17 +297,28 @@ const Register = () => {
               </select>
             </div>
           </div>
-          <p className="my-2 mx-1">
-            Already registered?{" "}
-            <Link className="btn-link" to="/login">
-              Login Now
-            </Link>
-          </p>
+          {error ? (
+            <span className="text-pink-600 my-2 mx-1" role="alert">
+              {error}
+
+              <Link className="btn-link" to="/register">
+                Register Now
+              </Link>
+            </span>
+          ) : (
+            <p className="my-2 mx-1">
+              Already registered?{" "}
+              <Link className="btn-link" to="/login">
+                Login Now
+              </Link>
+            </p>
+          )}
+
           <button className="btn btn-primary" type="submit">
             Create
           </button>
           <div className="divider">OR</div>
-          <p>{data}</p>
+          {/* <p>{data}</p> */}
           <button
             onClick={handleGoogleSignIn}
             className="btn btn-ghost text-lg"

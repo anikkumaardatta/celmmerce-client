@@ -5,17 +5,35 @@ import googleLogo from "../../assets/logo/google30.png";
 import { AuthContext } from "../../Context/AuthProvider/AuthProvider";
 
 const Login = () => {
-  const { googleSignIn } = useContext(AuthContext);
+  const { signIn, googleSignIn } = useContext(AuthContext);
 
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
   const [data, setData] = useState("");
   const [error, setError] = useState("");
 
-  //   const navigate = useNavigate();
-  //   const location = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
   const handleLogin = (userData) => {
     console.log(userData);
+    setError("");
+    signIn(userData.email, userData.password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        setError(error.message);
+        console.log(error);
+      });
   };
 
   const handleGoogleSignIn = () => {
@@ -39,10 +57,16 @@ const Login = () => {
         <form className="card-body pt-0" onSubmit={handleSubmit(handleLogin)}>
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Email</span>
+              {errors.email ? (
+                <span className="label-text text-pink-600" role="alert">
+                  {errors.email?.message}
+                </span>
+              ) : (
+                <span className="label-text">Email</span>
+              )}
             </label>
             <input
-              {...register("email")}
+              {...register("email", { required: "Email is required" })}
               type="email"
               placeholder="Email"
               className="input input-bordered"
@@ -50,21 +74,37 @@ const Login = () => {
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text">Password</span>
+              {errors.password ? (
+                <span className="label-text text-pink-600" role="alert">
+                  {errors.password?.message}
+                </span>
+              ) : (
+                <span className="label-text">Password</span>
+              )}
             </label>
             <input
-              {...register("password")}
+              {...register("password", { required: "Please Eater password" })}
               type="password"
               placeholder="Password"
               className="input input-bordered"
             />
           </div>
-          <p className="my-2 mx-1">
-            New to Celmmerce?{" "}
-            <Link className="btn-link" to="/register">
-              Register Now
-            </Link>
-          </p>
+          {error ? (
+            <span className="text-pink-600 my-2 mx-1" role="alert">
+              {error}
+
+              <Link className="btn-link" to="/register">
+                Register Now
+              </Link>
+            </span>
+          ) : (
+            <p className="my-2 mx-1">
+              New to Celmmerce?{" "}
+              <Link className="btn-link" to="/register">
+                Register Now
+              </Link>
+            </p>
+          )}
           <button className="btn btn-primary" type="submit">
             Login
           </button>

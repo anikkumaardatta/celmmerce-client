@@ -21,14 +21,13 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [userDataInfo, setUserDataInfo] = useState({});
+
   const createUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
-  const updateUser = (name, photo) => {
-    updateProfile(auth.currentUser, {
-      displayName: name,
-      photoURL: photo,
-    });
+  const updateUser = (userInfo) => {
+    return updateProfile(auth.currentUser, userInfo);
   };
 
   const googleSignIn = () => {
@@ -41,6 +40,7 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
   const logOut = () => {
+    setLoading(true);
     return signOut(auth);
   };
 
@@ -60,6 +60,10 @@ const AuthProvider = ({ children }) => {
     googleSignIn,
     createUser,
     updateUser,
+    logOut,
+    signIn,
+    setUserDataInfo,
+    userDataInfo,
   };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
