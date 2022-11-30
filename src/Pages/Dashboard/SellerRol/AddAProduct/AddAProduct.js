@@ -83,14 +83,22 @@ const AddAProduct = () => {
             <div className="form-control flex flex-col md:flex-row">
               <div className="mr-4">
                 <label className="label">
-                  <span className="label-text"> Brand</span>
+                  {errors.brandCategory ? (
+                    <span className="label-text text-pink-600" role="alert">
+                      {errors.brandCategory?.message}
+                    </span>
+                  ) : (
+                    <span className="label-text"> Brand</span>
+                  )}
                 </label>
 
                 <select
                   className="select select-bordered"
-                  {...register("brandCategory", { required: true })}
+                  {...register("brandCategory", {
+                    required: "Please select any brand.",
+                  })}
                 >
-                  <option value="" disabled>
+                  <option selected value="" disabled>
                     Select Brand
                   </option>
                   <option value="iphone">iPhone</option>
@@ -100,9 +108,9 @@ const AddAProduct = () => {
               </div>
               <div>
                 <label className="label">
-                  {errors.userImage ? (
+                  {errors.productImg ? (
                     <span className="label-text text-pink-600" role="alert">
-                      {errors.userImage?.message}
+                      {errors.productImg?.message}
                     </span>
                   ) : (
                     <span className="label-text">Product photo</span>
@@ -110,7 +118,7 @@ const AddAProduct = () => {
                 </label>
                 <label className="block btn btn-ghost border border-double border-xl border-gray-300 focus:ring focus:ring-violet-300">
                   <input
-                    {...register("ProductImg", {
+                    {...register("productImg", {
                       required: "Choose a product picture (Required)",
                     })}
                     type="file"
@@ -171,14 +179,22 @@ const AddAProduct = () => {
 
             <div className="form-control">
               <label className="label">
-                <span className="label-text"> Condition</span>
+                {errors.condition ? (
+                  <span className="label-text text-pink-600" role="alert">
+                    {errors.condition?.message}
+                  </span>
+                ) : (
+                  <span className="label-text"> Condition</span>
+                )}
               </label>
 
               <select
                 className="select select-bordered"
-                {...register("condition", { required: true })}
+                {...register("condition", {
+                  required: "Please select Product Condition.",
+                })}
               >
-                <option value="" disabled>
+                <option selected value="" disabled>
                   Select Brand
                 </option>
                 <option value="Excellent">Excellent</option>
@@ -231,9 +247,18 @@ const AddAProduct = () => {
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Description</span>
+                {errors.description ? (
+                  <span className="label-text text-pink-600" role="alert">
+                    {errors.description?.message}
+                  </span>
+                ) : (
+                  <span className="label-text">Description</span>
+                )}
               </label>
               <textarea
+                {...register("description", {
+                  required: "Please provide a description.",
+                })}
                 className="textarea textarea-bordered h-36"
                 placeholder="Description"
               ></textarea>
