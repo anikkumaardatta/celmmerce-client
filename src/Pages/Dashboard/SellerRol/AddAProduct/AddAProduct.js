@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../Context/AuthProvider/AuthProvider";
 
 const AddAProduct = () => {
   const { user, userDataInfo } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,7 +20,7 @@ const AddAProduct = () => {
   const onSubmit = async (data) => {
     const productImg = data.productImg[0];
     const formData = new FormData();
-
+    setLoading(true);
     const saveProductToDB = async (userObj) => {
       fetch(`http://localhost:5000/products`, {
         method: "POST",
@@ -76,8 +76,12 @@ const AddAProduct = () => {
           sellerUID: user.uid,
           isVerified: userDataInfo.isVerified,
           isAdvertise: false,
+          isSold: false,
         };
         saveProductToDB(productData);
+
+        setLoading(false);
+        navigate("/dashboard/myproducts");
       }
     } catch (error) {
       setLoading(false);
@@ -347,9 +351,15 @@ const AddAProduct = () => {
               className="input input-bordered focus:ring focus:ring-violet-300"
             />
           </div>
-          <button className="btn btn-primary my-8" type="submit">
-            Add Product
-          </button>
+          {loading ? (
+            <button className="btn btn-primary loading" type="button" disabled>
+              Adding
+            </button>
+          ) : (
+            <button className="btn btn-primary my-8" type="submit">
+              Add Product
+            </button>
+          )}
         </form>
       </div>
     </div>
