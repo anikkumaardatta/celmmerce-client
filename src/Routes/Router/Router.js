@@ -1,6 +1,9 @@
 import DashboardLayout from "../../layout/DashboardLayout";
 import Main from "../../layout/Main";
 import BrandCategory from "../../Pages/BrandCategory/BrandCategory";
+import Iphone from "../../Pages/BrandCategory/Iphone/Iphone";
+import Samsung from "../../Pages/BrandCategory/Samsung.js/Samsung";
+import Xiaomi from "../../Pages/BrandCategory/Xiaomi/Xiaomi";
 import Brands from "../../Pages/components/HomeComponents/MobileBrands/Brands";
 import AllBuyers from "../../Pages/Dashboard/AdminRol/AllBuyers/AllBuyers";
 import AllSellers from "../../Pages/Dashboard/AdminRol/AllSellers/AllSellers";
@@ -34,10 +37,29 @@ const router = createBrowserRouter([
         element: <Register></Register>,
       },
       {
-        path: "/brand/iPhone",
+        path: "/brand/iphone",
+        loader: () => fetch(`http://localhost:5000/products?brand=iphone`),
         element: (
           <PrivateRoutes>
-            <BrandCategory></BrandCategory>
+            <Iphone></Iphone>
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "/brand/samsung",
+        loader: () => fetch(`http://localhost:5000/products?brand=samsung`),
+        element: (
+          <PrivateRoutes>
+            <Samsung></Samsung>
+          </PrivateRoutes>
+        ),
+      },
+      {
+        path: "/brand/xiaomi",
+        loader: () => fetch(`http://localhost:5000/products?brand=xiaomi`),
+        element: (
+          <PrivateRoutes>
+            <Xiaomi></Xiaomi>
           </PrivateRoutes>
         ),
       },

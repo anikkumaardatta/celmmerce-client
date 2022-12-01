@@ -1,24 +1,62 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider/AuthProvider";
 import googleLogo from "../../assets/logo/google30.png";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { async } from "@firebase/util";
 
 const Register = () => {
-  const { user, createUser, updateUser, googleSignIn, setUserDataInfo } =
-    useContext(AuthContext);
+  const {
+    user,
+    userDataInfo,
+    setUserDataInfo,
+    createUser,
+    updateUser,
+    googleSignIn,
+  } = useContext(AuthContext);
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
+
   const navigate = useNavigate();
   // States
   const [error, setError] = useState("");
-  const [imgURL, setImgURL] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = (userData) => {
+  const getUserToken = (email) => {
+    fetch(`http://localhost:5000/jwt?email=${email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.accessToken) {
+          console.log("data from register", data);
+          localStorage.setItem("assessToken", data.accessToken);
+          // localStorage.setItem("userDataInfo", JSON.stringify(userDataInfo));
+          navigate("/");
+        }
+      });
+  };
+
+  const saveUserToDB = async (userObj) => {
+    fetch(`http://localhost:5000/users`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(userObj),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          getUserToken(userObj.userEmail);
+        }
+      });
+  };
+
+  const handleRegister = async (userData) => {
+    console.log("UserData", userData.userImage[0]);
     const userPhoto = userData.userImage[0];
 
     const formData = new FormData();
@@ -28,68 +66,48 @@ const Register = () => {
 
     const url = `https://api.imgbb.com/1/upload?key=${imgHostKey}`;
 
-    fetch(url, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((imgData) => {
-        console.log(imgData);
-        if (imgData.success) {
-          setImgURL(imgData.data.url);
-          if (imgURL) {
-            const userObj = {
-              userName: userData.userName,
-              userEmail: userData.userEmail,
-              userType: userData.category,
-              isVerified: false,
-            };
-            fetch(`http://localhost:5000/users`, {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify(userObj),
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                console.log(data);
-              });
-            setError("");
-            createUser(userData.userEmail, userData.password)
-              .then((userCredential) => {
-                const user = userCredential.user;
-                console.log(user);
-                toast("User created successfully");
-
-                const userInfo = {
-                  displayName: userData.userName,
-                  photoURL: imgData.data.url,
-                };
-
-                updateUser(userInfo)
-                  .then(() => {
-                    navigate("/");
-                    console.log("Hello");
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
-              })
-              .catch((error) => {
-                const errorCode = error.code;
-                setError(error.message);
-                console.log(error);
-                // ..
-              });
-          }
-        }
+    try {
+      setLoading(true);
+      const res = await fetch(url, {
+        method: "POST",
+        body: formData,
       });
 
-    console.log(userPhoto);
-    console.log(userData);
-    console.log(user);
-    console.log();
+      const imgData = await res.json();
+      console.log(imgData);
+      if (imgData.success) {
+        if (imgData.data.url) {
+          setError("");
+          const userCredential = await createUser(
+            userData.userEmail,
+            userData.password
+          );
+          const user = userCredential.user;
+          toast("User created successfully");
+
+          const userInfo = {
+            displayName: userData.userName,
+            photoURL: imgData.data.url,
+          };
+
+          const result = await updateUser(userInfo);
+          const userObj = {
+            userName: userData.userName,
+            userEmail: userData.userEmail,
+            userType: userData.category,
+            isVerified: false,
+          };
+          localStorage.setItem("userDataInfo", JSON.stringify(userObj));
+          setUserDataInfo(userObj);
+          const savedResult = await saveUserToDB(userObj);
+          console.log("savedResult: ", savedResult);
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
+    }
   };
 
   const handleGoogleSignIn = () => {
@@ -102,91 +120,6 @@ const Register = () => {
         setError(error.message);
       });
   };
-
-  // if(user.email && )
-
-  // const imgHostKey = process.env.REACT_APP_imgbb_key;
-  // const navigate = useNavigate();
-
-  // const [data, setData] = useState("");
-  // const [error, setError] = useState("");
-  // const [img, setImg] = useState(null);
-  // const [imgLoad, setImgLoad] = useState(null);
-  // const [imgURL, setImgURL] = useState(null);
-  // const [userInfo, setUserInfo] = useState([]);
-
-  // console.log(user);
-
-  // const handleRegister = (userData) => {
-  //   const userPhoto = userData.userImage[0];
-
-  //   const formData = new FormData();
-  //   formData.append("image", userPhoto);
-
-  //   const url = `https://api.imgbb.com/1/upload?key=${imgHostKey}`;
-
-  //   fetch(url, {
-  //     method: "POST",
-  //     body: formData,
-  //   })
-  //     .then((res) => res.json())
-  //     .then((imgData) => {
-  //       console.log(imgData);
-  //       if (imgData.success) {
-  //         setImgURL(imgData.data.url);
-  //         if (imgURL) {
-  //           const userObj = {
-  //             userName: userData.userName,
-  //             userEmail: userData.userEmail,
-  //             userImage: imgURL,
-  //             userType: userData.category,
-  //             isVerified: false,
-  //           };
-  //           // Set user info to the DB
-  //           fetch(`http://localhost:5000/users`, {
-  //             method: "POST",
-  //             headers: {
-  //               "content-type": "application/json",
-  //             },
-  //             body: JSON.stringify(userObj),
-  //           })
-  //             .then((res) => res.json())
-  //             .then((data) => {
-  //               console.log(data);
-  //             });
-  //           const { userEmail, password } = userData;
-  //           createUser(userEmail, password)
-  //             .then((userCredential) => {
-  //               const user = userCredential.user;
-  //               updateUser(userData.userName, imgData.data.url)
-  //                 .then(() => {
-  //                   console.log("success");
-  //                 })
-  //                 .catch((error) => {
-  //                   setError(error.message);
-  //                   console.log(error);
-  //                 });
-  //             })
-  //             .catch((error) => {
-  //               console.log(error);
-  //               // ..
-  //             });
-  //         }
-  //       }
-  //     });
-  //   //   set user info
-  //   // console.log("User Info:", user);
-  // };
-  // const handleGoogleSignIn = () => {
-  //   googleSignIn()
-  //     .then((result) => {
-  //       const user = result.user;
-  //       // navigate(from, { replace: true });
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message);
-  //     });
-  // };
 
   return (
     <div className="p-5 bg-base-200">
@@ -314,9 +247,15 @@ const Register = () => {
             </p>
           )}
 
-          <button className="btn btn-primary" type="submit">
-            Create
-          </button>
+          {loading ? (
+            <button className="btn btn-primary loading" type="button" disabled>
+              Creating
+            </button>
+          ) : (
+            <button className="btn btn-primary" type="submit">
+              Create
+            </button>
+          )}
           <div className="divider">OR</div>
           {/* <p>{data}</p> */}
           <button

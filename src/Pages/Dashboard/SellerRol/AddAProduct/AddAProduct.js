@@ -1,36 +1,96 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../../Context/AuthProvider/AuthProvider";
 
 const AddAProduct = () => {
-  const { user } = useContext(AuthContext);
+  const { user, userDataInfo } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
 
   const {
     register,
-    formState: { errors },
     handleSubmit,
-  } = useForm();
+    watch,
+    formState: { errors },
+  } = useForm({
+    sellerName: user?.displayName,
+    sellerEmail: user?.email,
+  });
 
-  const handleAddProduct = (data) => {
-    console.log(data);
-    const productInfo = {
-      sellerName: user?.displayName,
-      sellerEmail: user?.email,
-      sellerPhoto: user?.photoURL,
-      // productName:
+  const onSubmit = async (data) => {
+    const productImg = data.productImg[0];
+    const formData = new FormData();
+
+    const saveProductToDB = async (userObj) => {
+      fetch(`http://localhost:5000/products`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(userObj),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        });
     };
+
+    formData.append("image", productImg);
+
+    const imgHostKey = process.env.REACT_APP_imgbb_key;
+
+    const url = `https://api.imgbb.com/1/upload?key=${imgHostKey}`;
+    console.log(imgHostKey);
+    try {
+      setLoading(true);
+      fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+      const res = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      const imgData = await res.json();
+      if (imgData.success) {
+        console.log(user);
+        console.log(data);
+        const productData = {
+          picture: imgData.data.url,
+          productName: data.productName,
+          brandCategory: data.brandCategory,
+
+          resellPrice: data.resellPrice,
+          originalPrice: data.marketPrice,
+          yearsOfUse: data.usedDays,
+          condition: data.condition,
+          publishDate: new Date(),
+          description: data.description,
+
+          sellerName: user?.displayName,
+          sellerImg: user?.photoURL,
+          sellerEmail: user?.email,
+          sellerLocation: data.sellerLocation,
+          contactNumber: data.sellerPhone,
+          sellerUID: user.uid,
+          isVerified: userDataInfo.isVerified,
+          isAdvertise: false,
+        };
+        saveProductToDB(productData);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error.message);
+    }
   };
-  console.log(user);
   return (
     <div className="m-5">
       <h1 className="text-2xl">Add A Product</h1>
       <div>
-        <form
-          className="card-body pt-0"
-          onSubmit={handleSubmit(handleAddProduct)}
-        >
+        <form className="card-body pt-0" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* sellerName */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Name</span>
@@ -43,9 +103,10 @@ const AddAProduct = () => {
                 placeholder="User Name"
                 className="input input-bordered focus:ring focus:ring-violet-300"
                 value={user?.displayName}
-                disabled
+                readOnly
               />
             </div>
+            {/* sellerEmail */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -56,9 +117,10 @@ const AddAProduct = () => {
                 placeholder="Email"
                 className="input input-bordered focus:ring focus:ring-violet-300"
                 value={user?.email}
-                disabled
+                readOnly
               />
             </div>
+            {/* sellerPhone */}
             <div className="form-control">
               <label className="label">
                 {errors.sellerPhone ? (
@@ -79,9 +141,11 @@ const AddAProduct = () => {
               />
             </div>
           </div>
+          {/* 1-brandCategory , productImg*/}
+          {/* 2-productName */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="form-control flex flex-col md:flex-row">
-              <div className="mr-4">
+            <div className="form-control flex flex-col justify-between  md:flex-row">
+              <div className="">
                 <label className="label">
                   {errors.brandCategory ? (
                     <span className="label-text text-pink-600" role="alert">
@@ -93,7 +157,7 @@ const AddAProduct = () => {
                 </label>
 
                 <select
-                  className="select select-bordered"
+                  className="select select-bordered w-40"
                   {...register("brandCategory", {
                     required: "Please select any brand.",
                   })}
@@ -155,7 +219,8 @@ const AddAProduct = () => {
               />
             </div>
           </div>
-
+          {/* 1-usedDays */}
+          {/* 2-condition */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="form-control">
               <label className="label">
@@ -176,7 +241,6 @@ const AddAProduct = () => {
                 className="input input-bordered focus:ring focus:ring-violet-300"
               />
             </div>
-
             <div className="form-control">
               <label className="label">
                 {errors.condition ? (
@@ -195,7 +259,7 @@ const AddAProduct = () => {
                 })}
               >
                 <option selected value="" disabled>
-                  Select Brand
+                  Select Condition
                 </option>
                 <option value="Excellent">Excellent</option>
                 <option value="Good">Good</option>
@@ -263,6 +327,25 @@ const AddAProduct = () => {
                 placeholder="Description"
               ></textarea>
             </div>
+          </div>
+          <div className="form-control">
+            <label className="label">
+              {errors.sellerLocation ? (
+                <span className="label-text text-pink-600" role="alert">
+                  {errors.sellerLocation?.message}
+                </span>
+              ) : (
+                <span className="label-text">Location</span>
+              )}
+            </label>
+            <input
+              {...register("sellerLocation", {
+                required: "Please provide your location",
+              })}
+              type="text"
+              placeholder="Location"
+              className="input input-bordered focus:ring focus:ring-violet-300"
+            />
           </div>
           <button className="btn btn-primary my-8" type="submit">
             Add Product

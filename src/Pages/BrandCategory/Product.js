@@ -1,20 +1,37 @@
 import React from "react";
 import { FaCertificate } from "react-icons/fa";
-
-const Product = ({ product, setProductData }) => {
+const Product = ({ product }) => {
+  console.log(product);
+  // const {
+  //   picture,
+  //   productName,
+  //   location,
+  //   description,
+  //   resalePrice,
+  //   originalPrice,
+  //   yearsOfUse,
+  //   condition,
+  //   sellerName,
+  //   sellerImg,
+  //   contactNumber,
+  //   publishDate,
+  // } = product;
   const {
+    brandCategory,
     picture,
     productName,
-    location,
-    description,
-    resalePrice,
-    originalPrice,
-    yearsOfUse,
     condition,
-    sellerName,
-    sellerImg,
-    contactNumber,
+    description,
+    yearsOfUse,
+    originalPrice,
+    resellPrice,
     publishDate,
+    sellerImg,
+    sellerName,
+    sellerLocation,
+    contactNumber,
+    sellerUID,
+    _id,
   } = product;
 
   return (
@@ -29,7 +46,7 @@ const Product = ({ product, setProductData }) => {
       <div className="card-body">
         <hr />
         <h2 className="card-title text-center">{productName}</h2>
-        <p className="text-xs text-gray-400">{publishDate}</p>
+        <p className="text-xs text-gray-400">PublishDate: {publishDate}</p>
         <p className="text-sm">
           Market Price:{" "}
           <span className="line-through font-bold text-violet-400">
@@ -38,10 +55,10 @@ const Product = ({ product, setProductData }) => {
         </p>
         <p className="text-md font-semibold">
           Price:{" "}
-          <span className="font-bold text-violet-700">${resalePrice}</span>
+          <span className="font-bold text-violet-700">${resellPrice}</span>
         </p>
         <p className="text-sm">Years Of Use: {yearsOfUse}</p>
-        <p className="text-sm text-violet-700">{location}</p>
+        <p className="text-sm text-violet-700">{sellerLocation}</p>
         <p className="text-sm text-violet-700">Condition: {condition}</p>
         <hr />
         <div className="seller-info">
@@ -67,7 +84,7 @@ const Product = ({ product, setProductData }) => {
         <div className="card-actions">
           {/* The button to open modal */}
           <label
-            onClick={() => setProductData(product)}
+            // onClick={() => setProductData(product)}
             htmlFor="buy-modal"
             className="btn btn-primary"
           >

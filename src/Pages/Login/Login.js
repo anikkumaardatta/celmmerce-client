@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import googleLogo from "../../assets/logo/google30.png";
 import { AuthContext } from "../../Context/AuthProvider/AuthProvider";
 
 const Login = () => {
-  const { signIn, googleSignIn } = useContext(AuthContext);
-
+  const { user, setUserDataInfo, signIn, googleSignIn } =
+    useContext(AuthContext);
   const {
     register,
     formState: { errors },
@@ -21,18 +21,33 @@ const Login = () => {
   const from = location.state?.from?.pathname || "/";
 
   const handleLogin = (userData) => {
-    console.log(userData);
-    setError("");
+    setError(null);
     signIn(userData.email, userData.password)
       .then((userCredential) => {
         const user = userCredential.user;
+        fetch(`http://localhost:5000/user?email=${userData.email}`)
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("data: ", data);
+            const currentUserData = {
+              userName: user?.displayName,
+              userEmail: user?.email,
+              userPhoto: user?.photoURL,
+              userType: data.userType,
+              isVerified: data.isVerified,
+            };
+
+            setUserDataInfo(currentUserData);
+            localStorage.setItem(
+              "userDataInfo",
+              JSON.stringify(currentUserData)
+            );
+          });
         console.log(user);
         navigate(from, { replace: true });
       })
       .catch((error) => {
-        const errorCode = error.code;
         setError(error.message);
-        console.log(error);
       });
   };
 
