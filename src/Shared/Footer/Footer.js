@@ -3,7 +3,7 @@ import logo from "../../assets/celmmerce150x150.png";
 
 const Footer = () => {
   return (
-    <div className=" bg-base-200 ">
+    <div className=" bg-base-200 mt-20">
       <footer className="footer footer-center p-10 max-w-5xl mx-auto">
         <div>
           <img src={logo} className="w-20" alt="" />

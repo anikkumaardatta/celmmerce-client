@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const MyProduct = ({ myProduct, handleAdvertise }) => {
+const MyProduct = ({ myProduct, handleAdvertise, handleDelete }) => {
   const {
     _id,
     picture,
@@ -10,7 +10,7 @@ const MyProduct = ({ myProduct, handleAdvertise }) => {
     isAdvertise,
     isSold,
   } = myProduct;
-
+  console.log("IDIDID", _id);
   return (
     <div className="card bg-base-100 shadow-xl">
       <figure className="px-10 pt-10">
@@ -38,7 +38,12 @@ const MyProduct = ({ myProduct, handleAdvertise }) => {
                 )}
               </>
             )}
-            <div className="btn btn-outline btn-error w-full mt-3">Delete</div>
+            <div
+              onClick={() => handleDelete(_id)}
+              className="btn btn-outline btn-error w-full mt-3"
+            >
+              Delete
+            </div>
           </>
         </div>
       </div>

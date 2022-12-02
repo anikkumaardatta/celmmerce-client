@@ -4,7 +4,6 @@ const MyBuyers = () => {
   return (
     <div>
       <h1>My Buyers</h1>
-      <h1>My Buyers</h1>
     </div>
   );
 };

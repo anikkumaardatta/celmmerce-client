@@ -14,7 +14,7 @@ const AdvertisedItems = () => {
 
   return (
     <div className="mt-20 max-w-6xl mx-auto">
-      <div className="text-center">
+      <div className="text-center mb-16">
         <h1 className="text-2xl font-bold text-primary">Advertised Items</h1>
       </div>
 
