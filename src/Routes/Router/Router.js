@@ -13,6 +13,7 @@ import AddAProduct from "../../Pages/Dashboard/SellerRol/AddAProduct/AddAProduct
 import MyBuyers from "../../Pages/Dashboard/SellerRol/MyBuyers/MyBuyers";
 import MyProducts from "../../Pages/Dashboard/SellerRol/MyProducts/MyProducts";
 import Login from "../../Pages/Login/Login";
+import NotFound from "../../Pages/NotFound/NotFound";
 import Register from "../../Pages/Register/Register";
 import PrivateRoutes from "../PrivateRoutes/PrivateRoutes";
 
@@ -63,6 +64,12 @@ const router = createBrowserRouter([
           </PrivateRoutes>
         ),
       },
+      //   404 =============================================
+      {
+        path: "*",
+        element: <NotFound></NotFound>,
+      },
+      //   404 =============================================
     ],
   },
   {

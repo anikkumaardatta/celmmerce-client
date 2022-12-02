@@ -113,7 +113,7 @@ const Product = ({ product, setProductData }) => {
                 <hr />
                 <h2 className="card-title text-center">{productName}</h2>
                 {isAdvertise && (
-                  <div class="badge badge-secondary">Advertised</div>
+                  <div className="badge badge-secondary">Advertised</div>
                 )}
                 <p className="text-xs text-gray-400 font-medium">
                   PublishDate: {publishDate}

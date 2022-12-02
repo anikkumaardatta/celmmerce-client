@@ -32,10 +32,11 @@ const MyProducts = () => {
         }
       });
   };
-  console.log(myProducts);
+
+  const handleDelete = (_id) => {};
 
   return (
-    <div>
+    <div className="mx-5">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
         {myProducts.map((myProduct) => (
           <MyProduct
