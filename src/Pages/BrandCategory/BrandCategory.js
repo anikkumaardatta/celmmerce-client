@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import BuyModal from "../components/ProductComponent/BuyModal/BuyModal";
 import Product from "./Product";
 
 const BrandCategory = ({ products }) => {
+  const [productData, setProductData] = useState({});
   return (
     <div className="max-w-6xl mx-auto">
       <h1 className="text-3xl font-semibold text-violet-500 m-12">
@@ -12,10 +14,11 @@ const BrandCategory = ({ products }) => {
           <Product
             key={product._id}
             product={product}
-            // setProductData={setProductData}
+            setProductData={setProductData}
           ></Product>
         ))}
       </div>
+      <BuyModal productData={productData}></BuyModal>
     </div>
   );
 };

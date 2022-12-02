@@ -8,7 +8,7 @@ const BuyModal = ({ productData }) => {
     productName,
     location,
     description,
-    resalePrice,
+    resellPrice,
     originalPrice,
     yearsOfUse,
     condition,
@@ -17,12 +17,13 @@ const BuyModal = ({ productData }) => {
     contactNumber,
     publishDate,
   } = productData;
+  console.log(productData);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
     const product = productName;
-    const price = resalePrice;
+    const price = resellPrice;
     const name = user.displayName;
     const email = user.email;
     const phone = form.phone.value;
@@ -50,7 +51,7 @@ const BuyModal = ({ productData }) => {
             <div className="ml-4">
               <h3 className="text-lg font-bold">{productName}</h3>
               <h3 className="text-lg font-bold text-violet-600">
-                ${resalePrice}
+                ${resellPrice}
               </h3>
               <p className="text-xs">{publishDate}</p>
             </div>
@@ -67,7 +68,7 @@ const BuyModal = ({ productData }) => {
               <input
                 type="text"
                 className="input input-bordered w-full "
-                value={`$${resalePrice}`}
+                value={`$${resellPrice}`}
                 disabled
               />
             </div>

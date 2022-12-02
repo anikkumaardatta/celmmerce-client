@@ -31,9 +31,7 @@ const Register = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.accessToken) {
-          console.log("data from register", data);
-          localStorage.setItem("assessToken", data.accessToken);
-          // localStorage.setItem("userDataInfo", JSON.stringify(userDataInfo));
+          localStorage.setItem("accessToken", data.accessToken);
           navigate("/");
         }
       });

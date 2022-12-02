@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../Context/AuthProvider/AuthProvider";
 
@@ -80,12 +81,15 @@ const AddAProduct = () => {
         };
         saveProductToDB(productData);
 
+        toast("Product added successfully");
         setLoading(false);
         navigate("/dashboard/myproducts");
       }
     } catch (error) {
       setLoading(false);
       console.log(error.message);
+
+      toast(error.message);
     }
   };
   return (

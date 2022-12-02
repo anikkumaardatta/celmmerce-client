@@ -11,7 +11,7 @@ const Brand = ({ brandData }) => {
       <div className="card-body items-center text-center">
         <h2 className="card-title">{name}</h2>
         <div className="card-actions">
-          <Link to={`/brand/${name.toLowerCase()}`}>
+          <Link to={`/brand/${name}`}>
             <button className="btn btn-primary">Products</button>
           </Link>
         </div>

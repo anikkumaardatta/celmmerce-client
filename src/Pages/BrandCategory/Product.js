@@ -1,21 +1,7 @@
 import React from "react";
 import { FaCertificate } from "react-icons/fa";
-const Product = ({ product }) => {
+const Product = ({ product, setProductData }) => {
   console.log(product);
-  // const {
-  //   picture,
-  //   productName,
-  //   location,
-  //   description,
-  //   resalePrice,
-  //   originalPrice,
-  //   yearsOfUse,
-  //   condition,
-  //   sellerName,
-  //   sellerImg,
-  //   contactNumber,
-  //   publishDate,
-  // } = product;
   const {
     brandCategory,
     picture,
@@ -29,9 +15,12 @@ const Product = ({ product }) => {
     sellerImg,
     sellerName,
     sellerLocation,
+    sellerEmail,
     contactNumber,
     sellerUID,
     _id,
+    isAdvertise,
+    isVerified,
   } = product;
 
   return (
@@ -46,20 +35,24 @@ const Product = ({ product }) => {
       <div className="card-body">
         <hr />
         <h2 className="card-title text-center">{productName}</h2>
-        <p className="text-xs text-gray-400">PublishDate: {publishDate}</p>
-        <p className="text-sm">
+        <p className="text-xs text-gray-400 font-medium">
+          PublishDate: {publishDate}
+        </p>
+        <p className="text-sm font-semibold">
           Market Price:{" "}
-          <span className="line-through font-bold text-violet-400">
+          <span className="line-through font-bold text-orange-500">
             ${originalPrice}
           </span>
         </p>
-        <p className="text-md font-semibold">
+        <p className="text-lg font-semibold">
           Price:{" "}
           <span className="font-bold text-violet-700">${resellPrice}</span>
         </p>
-        <p className="text-sm">Years Of Use: {yearsOfUse}</p>
-        <p className="text-sm text-violet-700">{sellerLocation}</p>
-        <p className="text-sm text-violet-700">Condition: {condition}</p>
+        <p className="text-sm font-semibold">Years Of Use: {yearsOfUse}</p>
+        <p className="text-sm text-violet-700 font-semibold">
+          {sellerLocation}
+        </p>
+        <p className="text-sm font-semibold">Condition: {condition}</p>
         <hr />
         <div className="seller-info">
           <div className="profile flex flex-row align-middle items-center ">
@@ -70,21 +63,27 @@ const Product = ({ product }) => {
             </div>
             <div className="ml-2 my-2 mb-4">
               <div className="flex flex-row items-center justify-center">
-                <h3 className="text-md font-semibold inline-block mr-2">
+                <h3 className="ml-0 text-md font-semibold inline-block mr-2">
                   {sellerName}{" "}
                 </h3>{" "}
-                <FaCertificate className="text-violet-500"></FaCertificate>
+                {isVerified && (
+                  <FaCertificate className="text-violet-500"></FaCertificate>
+                )}
               </div>
-              <p className="text-xs">{contactNumber}</p>
+              <p className="ml-0 text-xs font-semibold text-gray-500">
+                {sellerEmail}
+              </p>
             </div>
           </div>
 
-          <p className="text-xs">Description: {description.slice(0, 85)}</p>
+          <p className="text-xs  font-medium text-gray-500">
+            Description: {description.slice(0, 85)}
+          </p>
         </div>
         <div className="card-actions">
           {/* The button to open modal */}
           <label
-            // onClick={() => setProductData(product)}
+            onClick={() => setProductData(product)}
             htmlFor="buy-modal"
             className="btn btn-primary"
           >
