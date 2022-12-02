@@ -1,26 +1,57 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import toast from "react-hot-toast";
+import { Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../Context/AuthProvider/AuthProvider";
 
 const BuyModal = ({ productData }) => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const {
+    _id,
     picture,
     productName,
-    location,
-    description,
     resellPrice,
-    originalPrice,
-    yearsOfUse,
-    condition,
-    sellerName,
-    sellerImg,
-    contactNumber,
+    sellerUID,
+    sellerEmail,
     publishDate,
   } = productData;
-  console.log(productData);
+  console.log("sddsd", productData);
+
+  const updateProductStatus = (_id) => {
+    fetch(`http://localhost:5000/productStatus?id=${_id}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.acknowledged) {
+        }
+      });
+  };
+
+  const saveOrdersToDB = (order) => {
+    fetch("http://localhost:5000/orders", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(order),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          toast("Your order added successfully.");
+          navigate("/");
+        }
+      });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const productID = _id;
     const form = event.target;
     const product = productName;
     const price = resellPrice;
@@ -28,7 +59,23 @@ const BuyModal = ({ productData }) => {
     const email = user.email;
     const phone = form.phone.value;
     const location = form.location.value;
-    console.log(product, price, name, email, phone, location);
+    console.log(product, price, name, email, phone, location, productID);
+
+    const soldProductDetails = {
+      productIMG: picture,
+      productName: product,
+      productID,
+      price,
+      sellerUID,
+      sellerEmail,
+      buyerUID: user.uid,
+      buyerName: name,
+      buyerEmail: email,
+      buyerPhone: phone,
+      meetingLocation: location,
+    };
+    updateProductStatus(productID);
+    saveOrdersToDB(soldProductDetails);
   };
   return (
     <>

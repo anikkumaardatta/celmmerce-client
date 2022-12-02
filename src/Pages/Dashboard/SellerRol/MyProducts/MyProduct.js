@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 
 const MyProduct = ({ myProduct, handleAdvertise }) => {
-  const { _id, picture, productName, publishDate, resellPrice, isAdvertise } =
-    myProduct;
+  const {
+    _id,
+    picture,
+    productName,
+    publishDate,
+    resellPrice,
+    isAdvertise,
+    isSold,
+  } = myProduct;
 
   return (
     <div className="card bg-base-100 shadow-xl">
@@ -15,21 +22,36 @@ const MyProduct = ({ myProduct, handleAdvertise }) => {
           {isAdvertise && (
             <div className="badge badge-secondary">Advertised</div>
           )}
+          {isSold && <div className="badge badge-success">Sold</div>}
         </h2>
         <div className="text-xl text-primary font-semibold">${resellPrice}</div>
         <p className="text-xs font-medium text-gray-500">
           PublishDate: {publishDate}
         </p>
         <div className="card-actions justify-center">
-          {!isAdvertise && (
+          {isSold ? (
             <div
               onClick={() => handleAdvertise(_id)}
-              className="btn btn-outline btn-primary w-full mt-3"
+              className="btn btn-outline w-full mt-3"
+              disabled
             >
-              Advertise
+              Unavailable
             </div>
+          ) : (
+            <>
+              {!isAdvertise && (
+                <div
+                  onClick={() => handleAdvertise(_id)}
+                  className="btn btn-outline btn-primary w-full mt-3"
+                >
+                  Advertise
+                </div>
+              )}
+              <div className="btn btn-outline btn-error w-full mt-3">
+                Delete
+              </div>
+            </>
           )}
-          <div className="btn btn-outline btn-error w-full mt-3">Delete</div>
         </div>
       </div>
     </div>
