@@ -46,7 +46,7 @@ const BuyModal = ({ productData }) => {
             <img
               src={picture}
               className="w-24 border border-double border-5 border-violet-400 bg-slate-200 rounded-lg"
-              alt=""
+              alt={productName}
             />
             <div className="ml-4">
               <h3 className="text-lg font-bold">{productName}</h3>
