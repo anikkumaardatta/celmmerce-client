@@ -27,7 +27,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const getUserToken = (email) => {
-    fetch(`http://localhost:5000/jwt?email=${email}`)
+    fetch(`https://celmmerce-server.vercel.app/jwt?email=${email}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.accessToken) {
@@ -38,7 +38,7 @@ const Register = () => {
   };
 
   const saveUserToDB = async (userObj) => {
-    fetch(`http://localhost:5000/users`, {
+    fetch(`https://celmmerce-server.vercel.app/users`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

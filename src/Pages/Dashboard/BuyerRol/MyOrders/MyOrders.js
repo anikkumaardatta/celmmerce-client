@@ -8,9 +8,9 @@ const MyOrders = () => {
   const { data: myOrders = [] } = useQuery({
     queryKey: ["brandsData"],
     queryFn: () =>
-      fetch(`http://localhost:5000/orders?buyerID=${user.uid}`).then((res) =>
-        res.json()
-      ),
+      fetch(
+        `https://celmmerce-server.vercel.app/orders?buyerID=${user.uid}`
+      ).then((res) => res.json()),
   });
   console.log(myOrders);
   return (

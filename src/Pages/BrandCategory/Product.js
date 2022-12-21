@@ -27,7 +27,7 @@ const Product = ({ product, setProductData }) => {
   const [sellerInfo, setSellerInfo] = useState({});
   useEffect(() => {
     setLoader(true);
-    fetch(`http://localhost:5000/user?email=${sellerEmail}`)
+    fetch(`https://celmmerce-server.vercel.app/user?email=${sellerEmail}`)
       .then((res) => res.json())
       .then((data) => {
         setLoader(false);
@@ -38,7 +38,7 @@ const Product = ({ product, setProductData }) => {
   console.log(sellerInfo.isVerified);
   // const sellerIsVerified = sellerInfo.isVerified;
   // const getSellerInfoFromDB = () => {
-  //   fetch(`http://localhost:5000/user?email=${sellerEmail}`)
+  //   fetch(`https://celmmerce-server.vercel.app/user?email=${sellerEmail}`)
   //     .then((res) => res.json())
   //     .then((data) => {
   //       console.log(data);

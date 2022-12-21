@@ -39,7 +39,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/brand/iphone",
-        loader: () => fetch(`http://localhost:5000/products?brand=iphone`),
+        loader: () =>
+          fetch(`https://celmmerce-server.vercel.app/products?brand=iphone`),
         element: (
           <PrivateRoutes>
             <Iphone></Iphone>
@@ -48,7 +49,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/brand/samsung",
-        loader: () => fetch(`http://localhost:5000/products?brand=samsung`),
+        loader: () =>
+          fetch(`https://celmmerce-server.vercel.app/products?brand=samsung`),
         element: (
           <PrivateRoutes>
             <Samsung></Samsung>
@@ -57,7 +59,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/brand/xiaomi",
-        loader: () => fetch(`http://localhost:5000/products?brand=xiaomi`),
+        loader: () =>
+          fetch(`https://celmmerce-server.vercel.app/products?brand=xiaomi`),
         element: (
           <PrivateRoutes>
             <Xiaomi></Xiaomi>

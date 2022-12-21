@@ -13,7 +13,7 @@ const MyProducts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/products?seller=${user.uid}`)
+    fetch(`https://celmmerce-server.vercel.app/products?seller=${user.uid}`)
       .then((res) => res.json())
       .then((data) => setMyProducts(data));
   }, []);
@@ -21,7 +21,7 @@ const MyProducts = () => {
   // const { data: myProducts = [] } = useQuery({
   //   queryKey: ["brandsData"],
   //   queryFn: () =>
-  //     fetch(`http://localhost:5000/products?seller=${user.uid}`).then((res) =>
+  //     fetch(`https://celmmerce-server.vercel.app/products?seller=${user.uid}`).then((res) =>
   //       res.json()
   //     ),
   // });
@@ -29,7 +29,7 @@ const MyProducts = () => {
   const handleAdvertise = (_id, updateProduct) => {
     setLoading(true);
     // Get Product
-    fetch(`http://localhost:5000/product?id=${_id}`, {
+    fetch(`https://celmmerce-server.vercel.app/product?id=${_id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -46,9 +46,12 @@ const MyProducts = () => {
   const handleDelete = (_id) => {
     const confirm = window.confirm("Are you sure to delete?");
     if (confirm) {
-      fetch(`http://localhost:5000/products/delete?productID=${_id}`, {
-        method: "DELETE",
-      })
+      fetch(
+        `https://celmmerce-server.vercel.app/products/delete?productID=${_id}`,
+        {
+          method: "DELETE",
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           console.log(data);

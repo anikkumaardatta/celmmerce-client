@@ -18,7 +18,7 @@ const BuyModal = ({ productData }) => {
   console.log("sddsd", productData);
 
   const updateProductStatus = (_id) => {
-    fetch(`http://localhost:5000/productStatus?id=${_id}`, {
+    fetch(`https://celmmerce-server.vercel.app/productStatus?id=${_id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -33,7 +33,7 @@ const BuyModal = ({ productData }) => {
   };
 
   const saveOrdersToDB = (order) => {
-    fetch("http://localhost:5000/orders", {
+    fetch("https://celmmerce-server.vercel.app/orders", {
       method: "POST",
       headers: {
         "content-type": "application/json",

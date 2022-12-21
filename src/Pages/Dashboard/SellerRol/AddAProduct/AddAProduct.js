@@ -23,7 +23,7 @@ const AddAProduct = () => {
     const formData = new FormData();
     setLoading(true);
     const saveProductToDB = async (userObj) => {
-      fetch(`http://localhost:5000/products`, {
+      fetch(`https://celmmerce-server.vercel.app/products`, {
         method: "POST",
         headers: {
           "content-type": "application/json",

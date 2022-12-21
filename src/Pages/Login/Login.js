@@ -25,7 +25,9 @@ const Login = () => {
     signIn(userData.email, userData.password)
       .then((userCredential) => {
         const user = userCredential.user;
-        fetch(`http://localhost:5000/user?email=${userData.email}`)
+        fetch(
+          `https://celmmerce-server.vercel.app/user?email=${userData.email}`
+        )
           .then((res) => res.json())
           .then((data) => {
             console.log("data: ", data);
